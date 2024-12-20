@@ -1,7 +1,51 @@
 Linux应用开发
 视频来源：B站尚硅谷嵌入式linux应用层开发，linux网络编程，linux进程线程，linux文件IO
 目录：
-1 文件IO与系统调用
-2 进程与线程
-3 Socket网络编程
-4 守护线程与多路复用
+1 前置知识
+2 文件IO与系统调用
+3 进程与线程
+4 Socket网络编程
+5 守护线程与多路复用
+
+1 前置知识
+------------------------------------------------------------------------------------------------------------------------------------
+1.1 c语言编译过程：
+------------------
+1预编译指令：gcc -E hello.c -o hello.i（hello.c为c语言文件，hello.i为预编译后的文件名称）
+           gcc -E main.c -o main.i
+2编译指令：gcc -S hello.i -o hello.s (同上)
+          gcc -S main.i -o main.s
+3汇编（汇编转二进制）：gcc -C hello.s -o hello.o
+                    gcc -C main.s -o main.o
+                    //gcc main.o hello.o -o main (hello.o文件实现sayhell的功能，main.o依赖hello.o文件)
+4链接(可执行文件)：gcc -static hello.o main.o -o main(静态链接)
+
+                 gcc hello.o main.o -o main(动态链接)
+
+                 ar crv libhello.a hello.o(混合链接)
+                 gcc main.o -L ./ -lhello -o main
+                
+
+将自己编写的部分代码处理为动态库：gcc -fPIC -shared -o libhello.so hello.o(libhello.so为处理后的动态库，hello.o为要编写的成动态库的文件)
+将main.o链接处理的hello.so库： gcc main.o -L ./(库的路径) -lhello(固定格式，库名称) -o main
+
+linux默认的动态链接库文件夹是/usr/lib
+假设libhello.so动态库位于/home/oyh/下
+执行可执行文件：LD_LIBRARY_PATH=/home/oyh ./main
+
+删除可执行文件：rm main
+反汇编（对main.o内容进行反汇编）：objdump -d main.o
+------------------
+
+1.2 Makefile基础
+------------------
+1 安装工具箱：sudo apt install -y build-essential
+2 编写Makefile文件：
+#Makefile文件内容通常由以下三部分组成
+#<目标名称>:<前置依赖>
+#  \t<需要执行的命令>
+例如：
+main:hello.o main.o
+  gcc hello.o main.o -o main
+3 编译。终端输入make
+4 执行文件。终端输入./main
