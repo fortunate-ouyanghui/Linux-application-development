@@ -15,8 +15,8 @@ Linux应用开发
            gcc -E main.c -o main.i
 2编译指令：gcc -S hello.i -o hello.s (同上)
           gcc -S main.i -o main.s
-3汇编（汇编转二进制）：gcc -C hello.s -o hello.o
-                    gcc -C main.s -o main.o
+3汇编（汇编转二进制）：gcc -c hello.s -o hello.o
+                    gcc -c main.s -o main.o
                     //gcc main.o hello.o -o main (hello.o文件实现sayhell的功能，main.o依赖hello.o文件)
 4链接(可执行文件)：gcc -static hello.o main.o -o main(静态链接)
 
@@ -40,6 +40,7 @@ linux默认的动态链接库文件夹是/usr/lib
 1.2 Makefile基础
 ------------------
 1 安装工具箱：sudo apt install -y build-essential
+
 2 编写Makefile文件：
 #Makefile文件内容通常由以下三部分组成
 #<目标名称>:<前置依赖>
@@ -56,6 +57,24 @@ main.o:main.c hello.h
 hello.o:hello.c hello.h
   gcc -c hello.c -o hello.o
 
-3 编译。终端输入make
-4 执行文件。终端输入./main
+#清除中间文件。
+clean:
+  rm main.o hello.o
+
+2.1 编译。终端输入make
+2.2 (可选)清除中间文件。终端输入make clean
+2.3 执行文件。终端输入./main
+
+3 Makefile语法知识
+3.1 变量：
+定义变量 objects
+objects :=hello.o main.o
+或
+objects :=hello.o\
+          main.o
+使用变量 ${objects}
+
+
+
+
 
