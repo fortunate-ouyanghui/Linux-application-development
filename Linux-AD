@@ -45,7 +45,17 @@ linux默认的动态链接库文件夹是/usr/lib
 #<目标名称>:<前置依赖>
 #  \t<需要执行的命令>
 例如：
+#目标是编译出main文件 依赖hello.o和main.o
+#编译的命令是：gcc main.o hello.o -o main
 main:hello.o main.o
   gcc hello.o main.o -o main
+
+main.o:main.c hello.h
+  gcc -c main.c -o main.o
+
+hello.o:hello.c hello.h
+  gcc -c hello.c -o hello.o
+
 3 编译。终端输入make
 4 执行文件。终端输入./main
+
